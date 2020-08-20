@@ -1,0 +1,98 @@
+<?php
+function gdpr_event_schema(){
+  // Create gdpr log table.
+  $schema['gdpr_log'] = array(
+      'description' => 'The table for storing the gdpr log.',
+      'fields' => array(
+          'id' => array(
+              'description' => 'The primary identifier for gdpr log.',
+              'type' => 'serial',
+              'not null' => TRUE,
+              'unsigned' => TRUE,
+          ),
+          'email' => array(
+              'description' => 'Log Email.',
+              'type' => 'varchar',
+              'length' => 255,
+              'not null' => TRUE,
+              'default' => '',
+          ),
+          'form_name' => array(
+              'description' => 'Log form name.',
+              'type' => 'varchar',
+              'length' => 255,
+              'not null' => TRUE,
+              'default' => '',
+          ),
+          'country' => array(
+              'description' => 'Country name.',
+              'type' => 'varchar',
+              'length' => 255,
+              'not null' => TRUE,
+              'default' => '',
+          ),
+          'event' => array(
+              'description' => 'Event name.',
+              'type' => 'varchar',
+              'length' => 255,
+              'not null' => TRUE,
+              'default' => '',
+          ),
+          'token' => array(
+              'description' => 'Token for single/double opt in.',
+              'type' => 'varchar',
+              'length' => 255,
+              'not null' => TRUE,
+              'default' => '',
+          ),
+          'event_timestamp' => array(
+              'description' => 'created date time(yyyy-mm-dd H:i:s).',
+              'type' => 'varchar',
+              'mysql_type' => 'DATETIME',
+              'not null' => TRUE,
+          ),
+      ),
+      'primary key' => array('id'),
+  );
+
+  // Create gdpr consent table.
+  $schema['gdpr_consent'] = array(
+      'description' => 'The table for storing the gdpr consent data.',
+      'fields' => array(
+          'id' => array(
+              'description' => 'The primary identifier for gdpr log.',
+              'type' => 'serial',
+              'not null' => TRUE,
+              'unsigned' => TRUE,
+          ),
+          'email' => array(
+              'description' => 'Consent Email.',
+              'type' => 'varchar',
+              'length' => 255,
+              'not null' => TRUE,
+              'default' => '',
+          ),
+          'consent_status' => array(
+              'description' => 'Status of the consent.',
+              'type' => 'varchar',
+              'length' => 255,
+              'not null' => TRUE,
+              'default' => '',
+          ),
+          'created' => array(
+              'description' => 'created date time(yyyy-mm-dd H:i:s).',
+              'type' => 'varchar',
+              'mysql_type' => 'DATETIME',
+              'not null' => TRUE,
+          ),
+          'updated' => array(
+              'description' => 'created date time(yyyy-mm-dd H:i:s).',
+              'type' => 'varchar',
+              'mysql_type' => 'DATETIME',
+              'not null' => TRUE,
+          ),
+      ),
+      'primary key' => array('id'),
+  );
+  return $schema;
+}

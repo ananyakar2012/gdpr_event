@@ -1,0 +1,6 @@
+name: GDPR event
+type: module
+description: Event for GDPR
+core_version_requirement: ^8 || ^9
+core: 8.x
+package: Custom

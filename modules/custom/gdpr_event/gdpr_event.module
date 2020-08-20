@@ -1,0 +1,24 @@
+<?php
+use Drupal\gdpr_event\Event\GdprOptInEvent;
+
+function gdpr_event_entity_insert(Drupal\Core\Entity\EntityInterface $entity) {
+  // Dispatch the single opt in event so that subscribers can act accordingly.
+  \Drupal::service('event_dispatcher')->dispatch(GdprOptInEvent::GDPR_INFO_INSERT, new GdprOptInEvent($entity));
+}
+
+/**
+* Implements hook_mail().
+*/
+function gdpr_event_mail($key, &$message, $params) {
+ $options = array(
+   'langcode' => $message['langcode'],
+ );
+
+ switch ($key) {
+   case 'webform_submit':
+     $message['from'] = \Drupal::config('system.site')->get('mail');
+     $message['subject'] = t('GDPR Mail: @title', array('@title' => 'Verification Mail for '.$params['name']), $options);
+     $message['body'][] = $params['message'];
+     break;
+ }
+}

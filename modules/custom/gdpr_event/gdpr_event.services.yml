@@ -1,0 +1,9 @@
+services:
+  gdpr_event.webform.insert:
+    class: Drupal\gdpr_event\EventSubscriber\SingleOptInSubscriber
+    tags:
+    - { name: 'event_subscriber' }
+  gdpr_event.final.insert:
+    class: Drupal\gdpr_event\EventSubscriber\DoubleOptInSubscriber
+    tags:
+    - { name: 'event_subscriber' }
