@@ -1,0 +1,7 @@
+gdpr_event.doubleOptInController:
+  path: '/gdpr-verification/{token}'
+  defaults:
+    _controller: '\Drupal\gdpr_event\Controller\doubleOptInController::doubleOptIn'
+    _title: 'GDPR Form Double OPt In'
+  requirements:
+    _access: 'TRUE'

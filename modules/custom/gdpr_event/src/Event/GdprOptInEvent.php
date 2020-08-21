@@ -11,7 +11,6 @@ use Drupal\Core\Entity\EntityInterface;
 class GdprOptInEvent extends Event {
 
   const GDPR_INFO_INSERT = 'gdpr_event.node.insert';
-  const GDPR_FINAL_INSERT = 'gdpr_event.final.insert';
   /**
    * Node entity.
    *

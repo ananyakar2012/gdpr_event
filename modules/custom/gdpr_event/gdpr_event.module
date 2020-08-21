@@ -22,3 +22,52 @@ function gdpr_event_mail($key, &$message, $params) {
      break;
  }
 }
+
+/**
+/* Alter webform.
+*/
+function gdpr_event_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id){
+  if($form_id == "webform_add_form"){
+    $form['gdpr_aggrement'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Do you want to add this form as GDPR')
+    );
+     $form['actions']['submit']['#submit'][] = 'gdpr_event_webform_submit';
+    return $form;
+  }
+}
+
+/** Create element when webform submit if gdpr aggrement accepted.
+/*
+*/
+function gdpr_event_webform_submit(&$form, \Drupal\Core\Form\FormStateInterface $form_state){
+  if($form_state->getValue('gdpr_aggrement') == 1){
+    /** @var \Drupal\webform\WebformSubmissionForm $formObj */
+    $formObj = $form_state->getFormObject();
+    /** @var \Drupal\webform\WebformSubmissionInterface $webformData */
+    $webformData = $formObj->getEntity();
+    $webformID = $webformData->id();
+
+    $webforms = \Drupal::entityTypeManager()
+    ->getStorage('webform')
+    ->loadByProperties(["id" => $webformID]);
+
+    $email = [
+     'email'=>[ '#type' => 'email',
+       '#title' => 'Email']];
+    $country = [
+     'country'=>[ '#type' => 'select',
+       '#title' => 'Country',
+       '#options' => ['eu' => 'EU','non-eu' => 'Non EU'],
+     ]];
+    $consent = [
+     'consent'=>[ '#type' => 'checkbox',
+       '#title' => 'Do you want to share your information?',
+     ]];
+    foreach ($webforms as $webform) {
+      // $webform->getElementsDecoded() will get all the previous elements of the webform.
+      $newElementArrangment = array_merge($webform->getElementsDecoded(), $email, $country, $consent);
+      $webform->setElements($newElementArrangment)->save();
+    }
+  }
+}

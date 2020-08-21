@@ -1,24 +1,26 @@
 <?php
 
-namespace Drupal\gdpr_event\EventSubscriber;
+namespace Drupal\gdpr_event\Controller;
 
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Drupal\Core\Controller\ControllerBase;
 use Drupal\gdpr_event\Event\GdprOptInEvent;
+use Drupal\Core\Entity;
 
 /**
- * write in consent table, gdpr log with double opt in
+ * Class doubleOptInController.
  */
-class DoubleOptInSubscriber implements EventSubscriberInterface {
+class doubleOptInController extends ControllerBase {
 
   /**
-   * Log the creation of a new node.
+   * Actorlist.
    *
-   * @param \Drupal\gdpr_event\Event\GdprOptInEvent $event
+   * @return string
+   *   GDPR Double opt in.
    */
-  public function onTokenAccept(GdprOptInEvent $event) {
+  public function doubleOptIn() {
     $currentTime = date("Y-m-d h:i:s");
     $current_path = \Drupal::service('path.current')->getPath();
-    $tokenValue = substr($current_path, strrpos($current_path,"/")+1);
+    $tokenValue = str_replace(" ","+",substr($current_path, strrpos($current_path,"/")+1));
     //fetch required data from token
     $query = \Drupal::database()->select('gdpr_log', 'gt');
     $query->addField('gt', 'email');
@@ -65,22 +67,19 @@ class DoubleOptInSubscriber implements EventSubscriberInterface {
       $send = true;
 
       $result = $mailManager->mail($module, $key, $to, $langcode, $params, NULL, $send);
+      $message = $msgStatus = '';
       if ($result['result'] !== true) {
-        drupal_set_message(t('There was a problem sending your message and it was not sent.'), 'error');
+        $message = t('There was a problem sending your message and it was not sent.');
+        $msgStatus = 'error';
       }
       else {
-        drupal_set_message(t('Your message has been sent.'));
+        $message = t('Your message has been sent.');
+        $msgStatus = 'success';
       }
     }else{
-      drupal_set_message(t('Invalid Token'),'error');
+      $message = t('Invalid Token');
+      $msgStatus = 'error';
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getSubscribedEvents() {
-    $events[GdprOptInEvent::GDPR_FINAL_INSERT][] = ['onTokenAccept'];
-    return $events;
+    return drupal_set_message($message, $msgStatus);
   }
 }

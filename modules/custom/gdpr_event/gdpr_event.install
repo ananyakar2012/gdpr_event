@@ -24,6 +24,13 @@ function gdpr_event_schema(){
               'not null' => TRUE,
               'default' => '',
           ),
+          'page_url' => array(
+              'description' => 'Page URL.',
+              'type' => 'varchar',
+              'length' => 255,
+              'not null' => TRUE,
+              'default' => '',
+          ),
           'country' => array(
               'description' => 'Country name.',
               'type' => 'varchar',
